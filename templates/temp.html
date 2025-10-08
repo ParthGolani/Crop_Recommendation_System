@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crop Recommendation System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --lighter-green: #81c784;
+            --background-green: #f1f8e9;
+            --dark-green: #1b5e20;
+            --text-dark: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--background-green);
+        }
+        
+        .navbar {
+            background-color: var(--dark-green) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(46, 125, 50, 0.8), rgba(46, 125, 50, 0.9)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .section-title {
+            color: var(--primary-green);
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--light-green);
+        }
+        
+        .feature-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card .card-body {
+            padding: 30px 20px;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+            padding: 10px 30px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+            border-color: var(--dark-green);
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .crop-icon {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+        }
+        
+        .recommended-crop {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 20px 0;
+        }
+        
+        .step-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: var(--light-green);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-links a {
+            color: #e8f5e9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--light-green);
+        }
+    </style>
+  </head>
+  <body style="background:#BCBBB8">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Crop Recommendation System Using Machine Learning</a>
+      </div>
+    </nav>
+    <div class="container my-4">
+      <h1 class="text-success">Crop Recommendation System <span>🌱</span></h1>
+      <div class="container-box mt-4">
+        <form action="/predict" method="POST">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="Nitrogen" class="form-label">Nitrogen</label>
+              <input type="number" id="Nitrogen" name="Nitrogen" placeholder="Enter Nitrogen" class="form-control" required step="any">
+            </div>
+            <div class="col-md-4">
+              <label for="Phosporus" class="form-label">Phosphorus</label>
+              <input type="number" id="Phosporus" name="Phosporus" placeholder="Enter Phosphorus" class="form-control" required step="any">
+            </div>
+            <div class="col-md-4">
+              <label for="Potassium" class="form-label">Potassium</label>
+              <input type="number" id="Potassium" name="Potassium" placeholder="Enter Potassium" class="form-control" required step="any">
+            </div>
+            <div class="col-md-4">
+              <label for="Temperature" class="form-label">Temperature (°C)</label>
+              <input type="number" step="any" id="Temperature" name="Temperature" placeholder="Enter Temperature in °C" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label for="Humidity" class="form-label">Humidity (%)</label>
+              <input type="number" step="any" id="Humidity" name="Humidity" placeholder="Enter Humidity in %" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label for="pH" class="form-label">pH</label>
+              <input type="number" step="any" id="pH" name="pH" placeholder="Enter pH value" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label for="Rainfall" class="form-label">Rainfall (mm)</label>
+              <input type="number" step="any" id="Rainfall" name="Rainfall" placeholder="Enter Rainfall in mm" class="form-control" required>
+            </div>
+            <div class="col-12 text-center mt-3">
+              <button type="submit" class="btn btn-primary btn-lg">Get Recommendation</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Result card -->
+      <!-- Result Section -->
+{% if result %}
+<div class="result-card d-flex justify-content-center">
+  <div class="result-card" style="text-align: center; padding: 30px;">
+    <div class="crop-icon">
+      <i class="fas fa-seedling"></i>
+    </div>
+    <h3>Recommended Crop</h3>
+    <div class="recommended-crop">{{ result }}</div>
+    <p class="mb-4">Based on your input parameters, this crop is most likely to thrive in your conditions.</p>
+    
+    {% if inputs %}
+    <div class="mt-4" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+      <h6 style="color: white; margin-bottom: 15px;">Input Parameters</h6>
+      <div class="row text-start">
+        <div class="col-md-6">
+          <ul style="color: white; list-style: none; padding: 0;">
+            <li><strong>Nitrogen:</strong> {{ inputs.Nitrogen }}</li>
+            <li><strong>Phosphorus:</strong> {{ inputs.Phosphorus }}</li>
+            <li><strong>Potassium:</strong> {{ inputs.Potassium }}</li>
+            <li><strong>Temperature:</strong> {{ inputs.Temperature }}°C</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul style="color: white; list-style: none; padding: 0;">
+            <li><strong>Humidity:</strong> {{ inputs.Humidity }}%</li>
+            <li><strong>pH:</strong> {{ inputs.pH }}</li>
+            <li><strong>Rainfall:</strong> {{ inputs.Rainfall }}mm</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
+    <button onclick="window.location.href='#recommendation'" class="btn btn-outline-light mt-4">
+      Try Another Recommendation
+    </button>
+  </div>
+</div>
+{% endif %}
+      {% if error %}
+      <div class="mt-4">
+        <div class="alert alert-danger" role="alert">
+          <strong>Error:</strong> {{ error }}
+          {% if tb %}
+            <pre style="white-space: pre-wrap;">{{ tb }}</pre>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
